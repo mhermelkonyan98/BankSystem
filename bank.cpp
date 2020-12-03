@@ -45,20 +45,25 @@ void Bank::CreateNewAccount() {
     new_acc["ID"] = id;
     new_acc["age"] = age;
 
-    std::ofstream fout(name + ".json");
+    std::ofstream fout;
+    fout.open(name + ".json");
     if (fout.is_open()) {
         fout << std::setw(4) << new_acc << std::endl;
     } else {
-        fout.open(name + ".json");
-        fout << std::setw(4) << new_acc << std::endl;
+        std::cout << "Cannot Open File! Try Again." << std::endl;
+        CreateNewAccount();
     }
     fout.close();
 
     json cust;
     std::ifstream ifs;
-    ifs.open("customers.json");
-    ifs >> cust;
-    ifs.close();
+    if (ifs.is_open()) {
+        ifs >> cust;
+        ifs.close();
+    } else {
+        std::cout << "Cannot Open File! Try Again." << std::endl;
+        CreateNewAccount();
+    }
 
     cust["customer's list"] += name;
 
@@ -173,8 +178,13 @@ void Bank::RemoveAccount() {
 
             std::fstream fs;
             fs.open("customers.json", std::ios::out);
-            fs << std::setw(4) << new_jey << std::endl;
-            fs.close();
+            if (fs.is_open()) {
+                fs << std::setw(4) << new_jey << std::endl;
+                fs.close();
+            } else {
+                std::cout << "Cannot Open File! Try Again." << std::endl;
+                RemoveAccount();
+            }
 
             std::cout << "Your Account Is Removed!" << std::endl;
         } else {
